@@ -3,6 +3,8 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 from jinja2 import Environment, FileSystemLoader
 
+from read_wine import get_wines_from_excel
+
 env = Environment(loader=FileSystemLoader('.'))
 
 
@@ -22,7 +24,7 @@ def render_index():
     year_word = get_year_word(winery_age)
 
     template = env.get_template('template.html')
-    rendered_html = template.render(winery_age=winery_age, year_word=year_word)
+    rendered_html = template.render(wines=get_wines_from_excel(), winery_age=winery_age, year_word=year_word)
 
     with open('index.html', 'w', encoding='utf-8') as f:
         f.write(rendered_html)
