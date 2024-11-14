@@ -4,8 +4,9 @@ import pandas
 
 
 def get_wines_from_excel():
-    excel_data_df = pandas.read_excel('wine2.xlsx')
-    excel_data_df.columns = ['category', 'name', 'variety', 'price', 'image_url']
+    excel_data_df = pandas.read_excel('wine3.xlsx')
+    excel_data_df.columns = ['category', 'name', 'variety', 'price', 'image_url',
+                             'is_profitable']
     excel_data_df = excel_data_df.where(pandas.notnull(excel_data_df), None)
 
     grouped_wines = defaultdict(list)
@@ -16,7 +17,8 @@ def get_wines_from_excel():
             "Категория": wine['category'] or "",
             "Название": wine['name'] or "",
             "Сорт": wine['variety'] or "",
-            "Цена": wine['price'] or ""
+            "Цена": wine['price'] or "",
+            "Выгодное предложение": wine['is_profitable'] or False
         }
 
         category = wine['category'] or "Напитки"
@@ -24,7 +26,9 @@ def get_wines_from_excel():
 
     grouped_wines = dict(grouped_wines)
 
-    categories = ['Белые вина', 'Красные вина', 'Напитки']
-    categorized_wines = {category: grouped_wines.get(category, []) for category in categories}
+    for category, wines in grouped_wines.items():
+        if wines:
+            cheapest_wine = min(wines, key=lambda x: x['Цена'])
+            cheapest_wine['is_cheapest'] = True
 
-    return categorized_wines
+    return grouped_wines
