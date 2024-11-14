@@ -23,8 +23,10 @@ def render_index():
     winery_age = current_year - founding_year
     year_word = get_year_word(winery_age)
 
+    wines = get_wines_from_excel()
+
     template = env.get_template('template.html')
-    rendered_html = template.render(wines=get_wines_from_excel(), winery_age=winery_age, year_word=year_word)
+    rendered_html = template.render(wines=wines, winery_age=winery_age, year_word=year_word)
 
     with open('index.html', 'w', encoding='utf-8') as f:
         f.write(rendered_html)

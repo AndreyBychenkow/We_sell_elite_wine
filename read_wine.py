@@ -1,5 +1,4 @@
 from collections import defaultdict
-from pprint import pprint
 
 import pandas
 
@@ -24,9 +23,8 @@ def get_wines_from_excel():
         grouped_wines[category].append(wine_data)
 
     grouped_wines = dict(grouped_wines)
-    pprint(grouped_wines)
-    return grouped_wines
 
+    categories = ['Белые вина', 'Красные вина', 'Напитки']
+    categorized_wines = {category: grouped_wines.get(category, []) for category in categories}
 
-if __name__ == "__main__":
-    get_wines_from_excel()
+    return categorized_wines
