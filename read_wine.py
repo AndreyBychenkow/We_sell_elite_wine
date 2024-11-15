@@ -3,8 +3,11 @@ from collections import defaultdict
 
 import pandas
 from dotenv import load_dotenv
+from jinja2 import Environment, FileSystemLoader
 
 load_dotenv()
+
+env = Environment(loader=FileSystemLoader('.'))
 
 
 def get_wines_from_excel(file_path=None):
