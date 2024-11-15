@@ -1,11 +1,9 @@
 from datetime import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
-from jinja2 import Environment, FileSystemLoader
+from read_wine import get_wines_from_excel, env
 
-from read_wine import get_wines_from_excel
-
-env = Environment(loader=FileSystemLoader('.'))
+FOUNDING_YEAR = 1920
 
 
 def get_year_word(years):
@@ -18,21 +16,21 @@ def get_year_word(years):
 
 
 def render_index():
-    founding_year = 1920
     current_year = datetime.now().year
-    winery_age = current_year - founding_year
+    winery_age = current_year - FOUNDING_YEAR
     year_word = get_year_word(winery_age)
-
     wines = get_wines_from_excel()
-
     template = env.get_template('template.html')
     rendered_html = template.render(wines=wines, winery_age=winery_age, year_word=year_word)
-
     with open('index.html', 'w', encoding='utf-8') as f:
         f.write(rendered_html)
 
 
-render_index()
+def main():
+    render_index()
+    server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
+    server.serve_forever()
 
-server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
-server.serve_forever()
+
+if __name__ == "__main__":
+    main()
