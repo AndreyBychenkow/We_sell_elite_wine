@@ -4,19 +4,9 @@ from collections import defaultdict
 import pandas
 
 
-def get_wines_from_excel(file_path=None):
-    try:
-
-        file_path = file_path or os.environ['WINE_FILE_PATH']
-
-        if not os.path.exists(file_path):
-            raise FileNotFoundError
-
-    except (KeyError, FileNotFoundError):
-        raise FileNotFoundError(
-            "Файл не найден. Проверьте, что переменная окружения 'WINE_FILE_PATH' "
-            "установлена и файл существует."
-        )
+def get_wines_from_excel(file_path):
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Файл не найден: {file_path}. Проверьте, что файл существует.")
 
     excel_data_df = pandas.read_excel(file_path)
     excel_data_df.columns = ['category', 'name', 'variety', 'price', 'image_url', 'is_profitable']
