@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
@@ -44,8 +45,8 @@ def save_rendered_html(rendered_html):
         f.write(rendered_html)
 
 
-def render_index():
-    wines = get_wines_from_excel()
+def render_index(file_path):
+    wines = get_wines_from_excel(file_path)
     winery_age, year_word = get_winery_age_description()
     rendered_html = render_template(wines, winery_age, year_word)
     save_rendered_html(rendered_html)
@@ -53,7 +54,11 @@ def render_index():
 
 def main():
     load_dotenv()
-    render_index()
+    file_path = os.environ.get('WINE_FILE_PATH')
+    if not file_path:
+        raise EnvironmentError("Переменная окружения 'WINE_FILE_PATH' не установлена.")
+
+    render_index(file_path)
     server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
     server.serve_forever()
 
